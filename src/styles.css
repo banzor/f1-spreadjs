@@ -1,0 +1,41 @@
+@import '@mescius/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
+
+:root { font-family: Inter, Arial, sans-serif; color: #eaf2f7; background: #101b25; }
+* { box-sizing: border-box; }
+html, body, #app { width: 100%; height: 100%; margin: 0; }
+#app { display: flex; flex-direction: column; min-height: 0; }
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 14px 20px; background: #122431; border-bottom: 1px solid #294252; }
+.brand { display: flex; align-items: center; gap: 12px; min-width: 320px; }
+.brand-mark { font-size: 32px; font-weight: 900; color: #f35950; letter-spacing: -8px; padding-right: 8px; }
+h1 { font-size: 18px; margin: 0 0 3px; letter-spacing: .01em; }
+.brand p { color: #a9bfce; font-size: 12px; margin: 0; }
+.controls { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+label { color: #c9d8e3; font-size: 12px; font-weight: 700; }
+select, button { min-height: 34px; border: 1px solid #446174; border-radius: 4px; background: #1d3546; color: #eef7fb; font: inherit; font-size: 12px; padding: 6px 10px; }
+select { min-width: 180px; }
+button { cursor: pointer; }
+button:hover, select:hover { background: #2a4a5e; }
+button:focus-visible, select:focus-visible { outline: 2px solid #82cdeb; outline-offset: 2px; }
+button:disabled { cursor: not-allowed; opacity: .55; }
+.formula-bar { display: flex; min-height: 28px; align-items: center; background: #edf2f5; color: #253846; font-size: 12px; border-bottom: 1px solid #cdd8e0; }
+#cell-address { flex: 0 0 74px; font-weight: 700; text-align: center; border-right: 1px solid #cdd8e0; }
+#cell-formula { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 10px; }
+.workspace { display: flex; flex: 1; min-height: 0; }
+#spread-host { flex: 1; min-width: 0; min-height: 0; background: #fff; }
+#scenario-drawer { width: 340px; flex: 0 0 340px; overflow-y: auto; background: #f6f9fb; color: #263e4d; border-left: 1px solid #c5d3dd; padding: 12px; }
+#scenario-drawer[hidden] { display: none; }
+.drawer-heading { display: flex; align-items: center; justify-content: space-between; }
+.drawer-heading button { font-size: 21px; padding: 0 8px; }
+#scenario-drawer p { font-size: 12px; line-height: 1.5; }
+.scenario-actions { display: flex; gap: 8px; margin-bottom: 12px; }
+.scenario-actions select { min-width: 0; flex: 1; }
+#scenario-panel { min-height: 300px; color: #263e4d; }
+footer { display: flex; align-items: center; justify-content: space-between; gap: 20px; background: #10212e; padding: 5px 12px; color: #b8cbd7; font-size: 11px; }
+footer a { color: #91cfe6; }
+dialog { border: 1px solid #b4cad7; border-radius: 7px; max-width: 440px; padding: 23px; color: #1d3342; box-shadow: 0 24px 70px #09131c80; }
+dialog::backdrop { background: #0e1c2ab8; }
+dialog h2 { margin: 0 0 12px; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.dialog-actions button { background: #1b6078; border-color: #1b6078; }
+@media (max-width: 1100px) { .topbar { align-items: flex-start; } .brand { min-width: 260px; } .controls { max-width: 690px; } }
+@media (max-width: 720px) { .topbar { flex-direction: column; } .controls { justify-content: flex-start; } .brand { min-width: 0; } #scenario-drawer { width: 260px; flex-basis: 260px; } }

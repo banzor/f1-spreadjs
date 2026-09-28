@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:," />
+    <title>F1 Bahrain Race Strategy Workbook</title>
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark">//</span>
+          <div>
+            <h1>F1 Bahrain Race Strategy Workbook</h1>
+            <p>2025 Bahrain Grand Prix · historical race-engineering analysis</p>
+          </div>
+        </div>
+        <div class="controls">
+          <label for="driver-select">Driver</label>
+          <select id="driver-select" aria-label="Select driver"></select>
+          <button id="reset-button" type="button">Reset Workbook</button>
+          <button id="goal-button" type="button">Goal Seek</button>
+          <button id="restore-button" type="button">Actual Strategy</button>
+          <button id="save-button" type="button">Save Scenario</button>
+          <button id="compare-button" type="button">Compare</button>
+          <button id="scenarios-button" type="button" aria-expanded="false">Scenarios</button>
+        </div>
+      </header>
+      <div class="formula-bar"><span id="cell-address">A1</span><span id="cell-formula">Select a cell to inspect its formula</span></div>
+      <div class="workspace">
+        <main id="spread-host" aria-label="Bahrain race strategy workbook"></main>
+        <aside id="scenario-drawer" aria-label="Scenario analysis" hidden>
+          <div class="drawer-heading"><strong>Scenario analysis</strong><button id="drawer-close" type="button" aria-label="Close scenarios">×</button></div>
+          <p>Switch to the matching driver before applying a saved scenario.</p>
+          <div class="scenario-actions"><select id="scenario-select" aria-label="Saved strategy scenario"></select><button id="apply-button" type="button">Apply</button></div>
+          <div id="scenario-panel"></div>
+        </aside>
+      </div>
+      <footer><span id="status" role="status">Loading workbook…</span><span><a href="https://openf1.org/" target="_blank">OpenF1</a> data used with permission · powered by <a href="https://developer.mescius.com/spreadjs" target="_blank">SpreadJS</a> · unofficial analysis</span></footer>
+    </div>
+    <dialog id="goal-dialog">
+      <h2>Goal Seek result</h2>
+      <p id="goal-description"></p>
+      <div class="dialog-actions"><button id="goal-cancel" type="button">Cancel and restore pace</button><button id="goal-keep" type="button">Keep pace</button></div>
+    </dialog>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
