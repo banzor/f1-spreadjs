@@ -13,6 +13,26 @@ export function buildLapAnalysis(sheet: GC.Spread.Sheets.Worksheet, data: Bahrai
   sheet.addSpan(2, 0, 1, 12);
   sheet.setValue(3, 0, 'Clean pace excludes lap 1, pits, warm-up, caution/restart laps and large within-stint outliers.');
   sheet.addSpan(3, 0, 1, 15);
+  const legend = [
+    ['Fast for driver', '#ccebe6', '#23323d'],
+    ['Typical pace', '#ffffff', '#23323d'],
+    ['Slow for driver', '#f7d7d3', '#23323d'],
+    ["Driver's best", '#c8edce', '#23323d'],
+    ['Race fastest', '#d7c3ff', '#23323d'],
+    ['Caution / restart', palette.caution, '#23323d'],
+    ['Pit in / out', '#ffffff', '#a63b15']
+  ] as const;
+  sheet.setRowHeight(4, 30);
+  for (const [index, [label, background, foreground]] of legend.entries()) {
+    const column = index * 2;
+    sheet.addSpan(4, column, 1, 2);
+    sheet.setValue(4, column, label);
+    sheet.getRange(4, column, 1, 2)
+      .backColor(background)
+      .foreColor(foreground)
+      .font('bold 11px Inter, Arial, sans-serif')
+      .hAlign(GC.Spread.Sheets.HorizontalAlign.center);
+  }
   section(sheet, 5, 0, 21, 'LAP TIMES / SECONDS');
   headers(sheet, 6, 0, ['LAP', ...data.drivers.map(driver => driver.abbreviation)]);
   sheet.setColumnWidth(0, 72);
