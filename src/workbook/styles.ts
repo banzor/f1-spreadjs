@@ -34,6 +34,18 @@ export function headers(sheet: Worksheet, row: number, start: number, values: st
   sheet.setRowHeight(row, 32);
 }
 
+export function rowTop(sheet: Worksheet, row: number): number {
+  let top = 0;
+  for (let index = 0; index < row; index++) top += sheet.getRowHeight(index);
+  return top;
+}
+
+export function columnLeft(sheet: Worksheet, column: number): number {
+  let left = 0;
+  for (let index = 0; index < column; index++) left += sheet.getColumnWidth(index);
+  return left;
+}
+
 export function inputCell(sheet: Worksheet, row: number, column: number): void {
   sheet.getCell(row, column).backColor(palette.blue).foreColor('#0b507a').font('bold 12px Inter, Arial, sans-serif');
 }

@@ -1,7 +1,7 @@
 import * as GC from '@mescius/spread-sheets';
 import type { BahrainRaceDataset, DriverRace } from '../../types/race';
 import type { DataRanges } from './data';
-import { baseSheet, headers, section, seconds, signedSeconds, title } from '../styles';
+import { baseSheet, headers, rowTop, section, seconds, signedSeconds, title } from '../styles';
 import { palette } from '../config';
 
 export function buildDashboard(sheet: GC.Spread.Sheets.Worksheet, data: BahrainRaceDataset, ranges: DataRanges): void {
@@ -48,11 +48,20 @@ export function buildDashboard(sheet: GC.Spread.Sheets.Worksheet, data: BahrainR
   section(sheet, chartRow, 0, 13, 'RACE STORY');
   sheet.setValue(chartRow + 1, 0, 'Representative clean-lap pace');
   sheet.setValue(chartRow + 1, 7, 'Selected driver · position at lap end');
+  sheet.setArray(6, 14, [['Driver', 'Clean-lap pace (s)']]);
   sheet.setArray(chartRow + 3, 23, [['Lap', 'Position']]);
   for (let lap = 1; lap <= data.race.scheduledLaps; lap++) sheet.setValue(chartRow + 3 + lap, 23, lap);
-  sheet.charts.add('RacePace', GC.Spread.Sheets.Charts.ChartType.barClustered, 30, (chartRow + 2) * 25, 660, 380, `O8:P${data.drivers.length + 7}`);
-  const chart = sheet.charts.add('DriverPosition', GC.Spread.Sheets.Charts.ChartType.line, 730, (chartRow + 2) * 25, 650, 380, `X${chartRow + 4}:Y${chartRow + 61}`);
-  chart.title().text = 'Position by lap';
+  const chartTop = rowTop(sheet, chartRow + 2) + 8;
+  const paceChart = sheet.charts.add('RacePace', GC.Spread.Sheets.Charts.ChartType.barClustered, 30, chartTop, 660, rowTop(sheet, 50) - chartTop);
+  paceChart.series().add({ name: 'P7', xValues: `O8:O${data.drivers.length + 7}`, yValues: `P8:P${data.drivers.length + 7}` });
+  paceChart.title({ text: 'Representative clean-lap pace by driver (s)' });
+  const paceAxes = paceChart.axes();
+  paceAxes.primaryCategory.tickLabelSpacing = 1;
+  paceAxes.primaryCategory.style = { fontSize: 10 };
+  paceChart.axes(paceAxes);
+  const positionChart = sheet.charts.add('DriverPosition', GC.Spread.Sheets.Charts.ChartType.line, 730, chartTop, 650, 380);
+  positionChart.series().add({ name: `Y${chartRow + 4}`, xValues: `X${chartRow + 5}:X${chartRow + 61}`, yValues: `Y${chartRow + 5}:Y${chartRow + 61}` });
+  positionChart.title({ text: 'Selected driver position at lap end' });
   sheet.getRange(0, 0, 1, 13).backColor(palette.navy);
   sheet.setValue(chartRow + 20, 0, 'OpenF1 data used with permission · race results remain distinct from on-track positions.');
 }

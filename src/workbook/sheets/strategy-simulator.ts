@@ -2,7 +2,7 @@ import * as GC from '@mescius/spread-sheets';
 import type { BahrainRaceDataset, DriverRace } from '../../types/race';
 import type { StrategyInputs } from '../../types/strategy';
 import type { DataRanges } from './data';
-import { baseSheet, headers, inputCell, resultCell, section, seconds, signedSeconds, title } from '../styles';
+import { baseSheet, columnLeft, headers, inputCell, resultCell, rowTop, section, seconds, signedSeconds, title } from '../styles';
 import { calibrationRows } from './tire-strategy';
 import { sim } from '../config';
 
@@ -199,7 +199,9 @@ export function buildSimulator(sheet: GC.Spread.Sheets.Worksheet, data: BahrainR
   seconds(sheet, 55, 21, 57, 2);
   signedSeconds(sheet, 55, 11, 57);
   sheet.frozenRowCount(6);
-  sheet.charts.add('CumulativeDelta', GC.Spread.Sheets.Charts.ChartType.line, 760, 1080, 560, 270, 'A55:A112,L55:L112');
+  const deltaChart = sheet.charts.add('CumulativeDelta', GC.Spread.Sheets.Charts.ChartType.line, columnLeft(sheet, 9) + 8, rowTop(sheet, 43) + 8, 560, 245);
+  deltaChart.series().add({ name: 'L55', xValues: 'A56:A112', yValues: 'L56:L112' });
+  deltaChart.title({ text: 'Cumulative candidate vs actual delta (s)' });
 }
 
 export function updateSimulatorDriver(sheet: GC.Spread.Sheets.Worksheet, driver: DriverRace, raceLaps: number): void {

@@ -59,7 +59,9 @@ export function buildLapAnalysis(sheet: GC.Spread.Sheets.Worksheet, data: Bahrai
   sheet.setColumnWidth(10, 105);
   sheet.setColumnWidth(11, 105);
   for (let lap = 1; lap <= 57; lap++) sheet.setValue(detailHeader + lap, 0, lap);
-  sheet.charts.add('SelectedLapTimes', GC.Spread.Sheets.Charts.ChartType.line, 50, 3350, 850, 280, 'A74:B131');
+  const lapChart = sheet.charts.add('SelectedLapTimes', GC.Spread.Sheets.Charts.ChartType.line, 50, 3350, 850, 280);
+  lapChart.series().add({ name: 'B74', xValues: 'A75:A131', yValues: 'B75:B131' });
+  lapChart.title({ text: 'Selected driver lap times (s)' });
   sheet.setFormula(71, 22, `=MIN(Data!$AO$2:$AO$${ranges.lapEnd})`);
   for (let col = 1; col <= data.drivers.length; col++) {
     sheet.conditionalFormats.add3ScaleRule(
