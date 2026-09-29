@@ -40,8 +40,13 @@ export function buildTireStrategy(sheet: GC.Spread.Sheets.Worksheet, dataSheet: 
   }
   section(sheet, 29, 0, 17, 'OBSERVED STINTS / CALCULATED PACE');
   headers(sheet, 30, 0, ['DRIVER', 'STINT', 'TIRE', 'START', 'END', 'LENGTH', 'INITIAL AGE', 'CLEAN N', 'MEAN s', 'BEST s', 'SLOPE', 'ADJ SLOPE', 'PIT LANE', 'STOP s', 'QUALITY', 'TREND']);
+  sheet.setColumnWidth(2, 80);
+  sheet.setColumnWidth(8, 90);
+  sheet.setColumnWidth(9, 90);
   sheet.setColumnWidth(10, 105);
   sheet.setColumnWidth(11, 110);
+  sheet.setColumnWidth(12, 90);
+  sheet.setColumnWidth(13, 85);
   sheet.setColumnWidth(14, 125);
   sheet.setColumnWidth(15, 115);
   let row = 31;
