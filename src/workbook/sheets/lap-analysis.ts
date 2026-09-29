@@ -40,10 +40,42 @@ export function buildLapAnalysis(sheet: GC.Spread.Sheets.Worksheet, data: Bahrai
   const cautionLaps = new Set(data.drivers.flatMap(driver => driver.laps)
     .filter(observation => observation.neutralizationEventIds.length > 0 || observation.restartAdjacent)
     .map(observation => observation.lapNumber));
+  const raceControlNotes = new Map<number, string>();
+  const safetyCarPeriod = data.neutralizationPeriods.find(period => period.kind === 'SC');
+  const deployment = data.raceControlEvents.find(event => event.id === safetyCarPeriod?.startEventId);
+  const safetyCarIn = data.raceControlEvents.find(event => event.id === safetyCarPeriod?.endEventId);
+  const deploymentLap = deployment?.lapNumber;
+  const safetyCarInLap = safetyCarIn?.lapNumber;
+  if (deployment && safetyCarIn && deploymentLap != null && safetyCarInLap != null) {
+    const earlierReport = data.raceControlEvents.find(event =>
+      event.lapNumber === deploymentLap - 1 && event.message.startsWith('TRACK SURFACE SLIPPERY'));
+    if (earlierReport?.lapNumber != null) {
+      raceControlNotes.set(earlierReport.lapNumber,
+        `Race control, lap ${earlierReport.lapNumber}:\n${earlierReport.message}\nReported before the Safety Car. Deployment cause not stated.`);
+    }
+    for (let lap = deploymentLap; lap <= safetyCarInLap; lap++) {
+      const lines = [`Safety Car period, lap ${lap}`, `Lap ${deploymentLap}: ${deployment.message}`];
+      if (earlierReport) lines.push(`Earlier report, lap ${earlierReport.lapNumber}:`, earlierReport.message);
+      if (lap === safetyCarInLap) lines.push(`Lap ${lap}: ${safetyCarIn.message}`);
+      lines.push('Deployment cause not stated in race-control feed.');
+      raceControlNotes.set(lap, lines.join('\n'));
+    }
+    if (cautionLaps.has(safetyCarInLap + 1)) {
+      raceControlNotes.set(safetyCarInLap + 1,
+        `Restart-adjacent lap\nRace control, lap ${safetyCarInLap}: ${safetyCarIn.message}`);
+    }
+  }
   for (let lap = 1; lap <= 57; lap++) {
     const row = lap + 6;
     sheet.setValue(row, 0, lap);
     if (cautionLaps.has(lap)) sheet.getCell(row, 0).backColor(palette.caution);
+    const note = raceControlNotes.get(lap);
+    if (note) {
+      const comment = sheet.comments.add(row, 0, note);
+      comment.displayMode(GC.Spread.Sheets.Comments.DisplayMode.hoverShown);
+      comment.width(380);
+      comment.height(150);
+    }
     for (const [index, driver] of data.drivers.entries()) {
       const source = ranges.lapRows.get(`${driver.driverNumber}:${lap}`);
       if (source === undefined) continue;
