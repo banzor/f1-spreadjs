@@ -51,13 +51,12 @@ export function buildLapAnalysis(sheet: GC.Spread.Sheets.Worksheet, data: Bahrai
       event.lapNumber === deploymentLap - 1 && event.message.startsWith('TRACK SURFACE SLIPPERY'));
     if (earlierReport?.lapNumber != null) {
       raceControlNotes.set(earlierReport.lapNumber,
-        `Race control, lap ${earlierReport.lapNumber}:\n${earlierReport.message}\nReported before the Safety Car. Deployment cause not stated.`);
+        `Race control, lap ${earlierReport.lapNumber}:\n${earlierReport.message}`);
     }
     for (let lap = deploymentLap; lap <= safetyCarInLap; lap++) {
       const lines = [`Safety Car period, lap ${lap}`, `Lap ${deploymentLap}: ${deployment.message}`];
       if (earlierReport) lines.push(`Earlier report, lap ${earlierReport.lapNumber}:`, earlierReport.message);
       if (lap === safetyCarInLap) lines.push(`Lap ${lap}: ${safetyCarIn.message}`);
-      lines.push('Deployment cause not stated in race-control feed.');
       raceControlNotes.set(lap, lines.join('\n'));
     }
     if (cautionLaps.has(safetyCarInLap + 1)) {
@@ -74,7 +73,7 @@ export function buildLapAnalysis(sheet: GC.Spread.Sheets.Worksheet, data: Bahrai
       const comment = sheet.comments.add(row, 0, note);
       comment.displayMode(GC.Spread.Sheets.Comments.DisplayMode.hoverShown);
       comment.width(380);
-      comment.height(150);
+      comment.height(120);
     }
     for (const [index, driver] of data.drivers.entries()) {
       const source = ranges.lapRows.get(`${driver.driverNumber}:${lap}`);
