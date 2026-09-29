@@ -9,7 +9,7 @@ const detailHeader = 73;
 export function buildLapAnalysis(sheet: GC.Spread.Sheets.Worksheet, data: BahrainRaceDataset, ranges: DataRanges): void {
   baseSheet(sheet, 190, 30);
   title(sheet, 'LAP ANALYSIS / TIMING AND QUALITY', 14, 1);
-  sheet.setValue(2, 0, '57 race laps · gaps remain blank after retirement · color is relative within each driver');
+  sheet.setValue(2, 0, '57 race laps · gaps remain blank after retirement · lap-time heatmap is relative within each driver');
   sheet.addSpan(2, 0, 1, 12);
   sheet.setValue(3, 0, 'Clean pace excludes lap 1, pits, warm-up, caution/restart laps and large within-stint outliers.');
   sheet.addSpan(3, 0, 1, 15);
@@ -19,7 +19,7 @@ export function buildLapAnalysis(sheet: GC.Spread.Sheets.Worksheet, data: Bahrai
     ['Slow for driver', '#f7d7d3', '#23323d'],
     ["Driver's best", '#c8edce', '#23323d'],
     ['Race fastest', '#d7c3ff', '#23323d'],
-    ['Caution / restart', palette.caution, '#23323d'],
+    ['Caution / restart lap', palette.caution, '#23323d'],
     ['Pit in / out', '#ffffff', '#a63b15']
   ] as const;
   sheet.setRowHeight(4, 30);
@@ -37,15 +37,18 @@ export function buildLapAnalysis(sheet: GC.Spread.Sheets.Worksheet, data: Bahrai
   headers(sheet, 6, 0, ['LAP', ...data.drivers.map(driver => driver.abbreviation)]);
   sheet.setColumnWidth(0, 72);
   for (let col = 1; col <= data.drivers.length; col++) sheet.setColumnWidth(col, 82);
+  const cautionLaps = new Set(data.drivers.flatMap(driver => driver.laps)
+    .filter(observation => observation.neutralizationEventIds.length > 0 || observation.restartAdjacent)
+    .map(observation => observation.lapNumber));
   for (let lap = 1; lap <= 57; lap++) {
     const row = lap + 6;
     sheet.setValue(row, 0, lap);
+    if (cautionLaps.has(lap)) sheet.getCell(row, 0).backColor(palette.caution);
     for (const [index, driver] of data.drivers.entries()) {
       const source = ranges.lapRows.get(`${driver.driverNumber}:${lap}`);
       if (source === undefined) continue;
       sheet.setFormula(row, index + 1, `=IF(ISNUMBER(Data!C${source + 1}),Data!C${source + 1},"")`);
       const observation = driver.laps.find(item => item.lapNumber === lap)!;
-      if (observation.neutralizationEventIds.length || observation.restartAdjacent) sheet.getCell(row, index + 1).backColor(palette.caution);
       if (observation.pitIn || observation.pitOut) sheet.getCell(row, index + 1).foreColor('#a63b15').font('bold 11px Inter, Arial, sans-serif');
     }
   }
