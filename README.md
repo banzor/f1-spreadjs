@@ -32,11 +32,8 @@ The source modules are intentionally small: `scripts/` obtains and normalizes da
 
 ## GitHub Pages
 
-The `.github/workflows/pages.yml` workflow builds and publishes `dist` when the `main` branch is pushed, and it can also be run manually. Vite's relative asset paths support the project URL `https://banzor.github.io/f1-spreadjs/` without a repository-specific build setting.
+The `.github/workflows/pages.yml` workflow builds and publishes `dist` when the `main` branch is pushed, and it can also be run manually. Vite's relative asset paths support the project URL [https://banzor.github.io/f1-spreadjs/](https://banzor.github.io/f1-spreadjs/) without a repository-specific build setting.
 
-In [banzor/f1-spreadjs](https://github.com/banzor/f1-spreadjs), set **Settings → Pages → Build and deployment → Source** to **GitHub Actions**. Add the repository Actions secret `SPREADJS_DISTRIBUTION_KEY` with a SpreadJS 19.2 distribution key valid for the Pages hostname `banzor.github.io` (hostname only, without the scheme or `/f1-spreadjs/` path). The workflow intentionally fails before deployment if that key is absent. Push the project to `main`; the workflow's deployment step reports the resulting Pages URL.
-
-The distribution key is embedded in the public browser bundle by design. The Actions secret keeps it out of source control, but does not make the deployed key confidential. The built JavaScript also contains the bundled OpenF1-derived race data. The project owner confirms that the OpenF1 permission covers this public GitHub Pages demo and its bundled data; separate publication of the JSON in a public source repository should be confirmed before that distribution.
 
 ## Publication
 
